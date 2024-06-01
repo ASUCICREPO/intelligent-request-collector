@@ -6,7 +6,7 @@ import os
 import re
 import base64
 
-def _encode_svg(path):
+def encode_svg(path):
     """Encode an SVG to base64, from an absolute path."""
     svg = open(path).read()
     return base64.b64encode(svg.encode("utf-8")).decode("utf-8")
@@ -36,8 +36,8 @@ assistantTextColor = custom_theme["theme"]["assistantTextColor"]
 assistantBackgroundColor = custom_theme["theme"]["assistantBackgroundColor"]
 
 
-chatbotAvatar_ref = _encode_svg("./static/ChatbotAvatar.svg")
-userAvatar_ref = _encode_svg("./static/UserAvatar.svg")
+chatbotAvatar_ref = encode_svg("./static/ChatbotAvatar.svg")
+userAvatar_ref = encode_svg("./static/UserAvatar.svg")
 
 
 def message_func(text, is_user=False, is_df=False, model="gpt", phi=False):

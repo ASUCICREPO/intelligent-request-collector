@@ -1,11 +1,5 @@
 import boto3
 import json
-import logging
-from botocore.exceptions import ClientError
-# from .base import ModelAdapter
-
-logger = logging.getLogger(__name__)
-logging.basicConfig(level=logging.INFO)
 
 class BedrockClaudeAdapter():
     def __init__(self, model_id="anthropic.claude-3-sonnet-20240229-v1:0", region = 'us-east-1'):
