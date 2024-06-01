@@ -1,0 +1,13 @@
+[theme]
+primaryColor="#f47a1f"
+secondaryBackgroundColor="#fffdfa"
+textColor="#5f2700"
+
+appHeaderBackground="#FDF0E1"
+lefNavBackground="#FFFDFA"
+
+userTextColor="#4A4A4A"
+userBackgroundColor="#E6E6E6"
+
+assistantTextColor="5F2700"
+assistantBackgroundColor="#FDF0E1"

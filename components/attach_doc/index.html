@@ -1,0 +1,88 @@
+<html>
+  <body>
+    <label for="file-upload" class="file-upload" title="Attach Files">
+      <div>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,300,0,0" />
+        <span class="material-symbols-outlined" style="color: #696d79; font-family: 'Material Symbols Outlined', sans-serif; font-size: 24px">attach_file</span>
+      </div>
+      <input id="file-upload" type="file" accept="application/pdf, image/jpeg, image/png" multiple />
+    </label>
+    <style>
+      body {
+        margin: 0;
+      }
+      .file-upload {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 40.4px;
+        height: 40.4px;
+        background-color: #f8f8f8;
+        border-radius: 8px;
+      }
+
+      .file-upload:hover {
+        background-color: #f8f8f8;
+      }
+
+      .file-upload svg {
+        width: 18px;
+        height: 18px;
+        fill: #666;
+      }
+
+      .file-upload input[type="file"] {
+        display: none;
+      }
+    </style>
+
+    <script>
+      function sendMessageToStreamlitClient(type, data) {
+        var outData = Object.assign(
+          {
+            isStreamlitMessage: true,
+            type: type,
+          },
+          data
+        );
+        console.log(outData);
+        window.parent.postMessage(outData, "*");
+      }
+
+      function init() {
+        sendMessageToStreamlitClient("streamlit:componentReady", { apiVersion: 1 });
+      }
+
+      function setFrameHeight(height) {
+        sendMessageToStreamlitClient("streamlit:setFrameHeight", { height: height });
+      }
+
+      // The `data` argument can be any JSON-serializable value.
+      function sendDataToPython(data) {
+        console.log(data);
+        sendMessageToStreamlitClient("streamlit:setComponentValue", data);
+      }
+
+      const fileInput = document.getElementById("file-upload");
+      console.log(fileInput);
+      fileInput.addEventListener("change", (event) => {
+        const file = event.target.files[0];
+        console.log(file);
+        const reader = new FileReader();
+        console.log(reader);
+        reader.onload = () => {
+          const fileContent = reader.result.split(",")[1];
+          const fileName = file.name;
+        };
+        reader.readAsDataURL(file);
+      });
+      init();
+
+      window.addEventListener("load", function () {
+        window.setTimeout(function () {
+          setFrameHeight(document.documentElement.clientHeight);
+        }, 0);
+      });
+    </script>
+  </body>
+</html>
