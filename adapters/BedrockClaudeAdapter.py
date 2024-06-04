@@ -1,5 +1,11 @@
 import boto3
 import json
+import streamlit as st
+
+import asyncio
+
+from utils.chatInterface import show_spinner
+
 
 class BedrockClaudeAdapter():
     def __init__(self, model_id="anthropic.claude-3-sonnet-20240229-v1:0", region = 'us-east-1'):
@@ -18,7 +24,34 @@ class BedrockClaudeAdapter():
         }
 
         return json.dumps(payload)
-    
+
+    async def generate_response(self, llm_body):
+        accept = 'application/json'
+        contentType = 'application/json'
+
+        response = await asyncio.to_thread(self.client.invoke_model, body=llm_body, modelId=self.model_id, accept=accept, contentType=contentType)
+        response_body = json.loads(response['body'].read())
+        response_content = response_body['content'][0]['text']
+        
+        return response_content
+
+    async def spinner(self, processing_done):
+        while not processing_done.done():
+            await show_spinner(processing_done)
+
+    async def fetch_with_loader(self, llm_body):
+        processing_done = asyncio.Future()
+        spinner_task = asyncio.create_task(self.spinner(processing_done))
+
+        try:
+            response = await self.generate_response(llm_body)
+            processing_done.set_result(True)
+            return response
+        except Exception as e:
+            processing_done.set_exception(e)
+        finally:
+            await spinner_task
+
     def get_llm_body(self, chat_history, max_tokens=8000, temperature=0.5):
         system_prompt = """
         You are a CIP assistant responsible for helping the user effectively communicate their potato germplasm needs to the CIP Gene Bank. Your goal is to gather all the necessary information from the user and formulate a comprehensive request to CIP, reducing the need for extended back-and-forth communication.
@@ -190,14 +223,3 @@ class BedrockClaudeAdapter():
         
         bedrock_payload = self.generate_llm_payload(system_prompt=system_prompt, messages=chat_history, max_tokens=max_tokens, temperature=temperature)
         return bedrock_payload
-
-    def generate_response(self, llm_body):
-        accept = 'application/json'
-        contentType = 'application/json'
-
-        response = self.client.invoke_model(body=llm_body, modelId=self.model_id, accept=accept, contentType=contentType)
-        response_body = json.loads(response.get('body').read())
-        response_content = response_body['content'][0]['text']
-        
-        return response_content
-
