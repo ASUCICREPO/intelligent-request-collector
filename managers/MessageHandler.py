@@ -32,6 +32,13 @@ class MessageHandler:
         }
 
         messageHistory.append(AI_chat_element)
+        
+        if len(messageHistory) > 3:
+            text = messageHistory[-2]['content'][0]['text']
+            cleaned_text = re.sub(r'<current_collected_table>(.*?)</current_collected_table>', '', text)
+            messageHistory[-2]['content'][0]['text'] = cleaned_text
+            print("\nMessage History After Clean", messageHistory)
+            
         return messageHistory
 
     def parse_bot_response(self,response):
