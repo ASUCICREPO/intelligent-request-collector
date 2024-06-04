@@ -1,10 +1,9 @@
 import streamlit as st
-import html
-import re
 import toml
 import os
-import re
+import asyncio
 import base64
+import itertools
 
 def encode_svg(path):
     """Encode an SVG to base64, from an absolute path."""
@@ -77,3 +76,27 @@ def message_func(text, is_user=False, is_df=False, model="gpt", phi=False):
                     """,
             unsafe_allow_html=True,
         )
+
+async def show_spinner(processing_done):
+    chatbotAvatar = chatbotAvatar_ref
+    placeholder = st.empty()
+
+    # setup typing array
+    typing_array = ["Typing" + "." * i for i in range(8)]
+    typing_animation = itertools.cycle(typing_array)
+    
+    while not processing_done.done():
+        html_content = f"""
+            <div style="display: flex; align-items: center; margin-bottom: 10px; justify-content:flex-start;">
+                <img src="data:image/svg+xml;base64,{chatbotAvatar}" class="bot-avatar" alt="avatar" style="width: 40px; height: 40px;" />
+                <div style="background: {assistantBackgroundColor}; color: {assistantTextColor}; border-radius: 20px; padding: 10px; margin-right: 5px; max-width: 75%; font-size: 14px;">
+                    {next(typing_animation)} 
+                </div>
+            </div>
+        """
+        placeholder.markdown(html_content, unsafe_allow_html=True)
+        await asyncio.sleep(0.25)
+    
+    placeholder.empty()
+
+__all__ = ['show_spinner']

@@ -3,38 +3,10 @@ import json
 import streamlit as st
 
 import asyncio
-import itertools
 
-import toml
-import os
-import re
-import base64
-
-def encode_svg(path):
-    """Encode an SVG to base64, from an absolute path."""
-    svg = open(path).read()
-    return base64.b64encode(svg.encode("utf-8")).decode("utf-8")
+from utils.chatInterface import show_spinner
 
 
-# Define the path to the config.toml file
-config_path = os.path.join(os.path.dirname(
-    __file__), '..', '.streamlit', 'config.toml')
-
-# Define the path to the config.toml file
-custom_theme_path = os.path.join(os.path.dirname(
-    __file__), '..', '.custom_themes', 'cip.toml')
-
-# Load the configuration file
-config = toml.load(config_path)
-custom_theme= toml.load(custom_theme_path)
-
-# Extract colors from the config
-
-assistantBackgroundColor = custom_theme["theme"]["assistantBackgroundColor"]
-assistantTextColor = custom_theme["theme"]["assistantTextColor"]
-
-
-chatbotAvatar_ref = encode_svg("./static/ChatbotAvatar.svg")
 class BedrockClaudeAdapter():
     def __init__(self, model_id="anthropic.claude-3-sonnet-20240229-v1:0", region = 'us-east-1'):
         self.model_id = model_id
@@ -52,7 +24,34 @@ class BedrockClaudeAdapter():
         }
 
         return json.dumps(payload)
-    
+
+    async def generate_response(self, llm_body):
+        accept = 'application/json'
+        contentType = 'application/json'
+
+        response = await asyncio.to_thread(self.client.invoke_model, body=llm_body, modelId=self.model_id, accept=accept, contentType=contentType)
+        response_body = json.loads(response['body'].read())
+        response_content = response_body['content'][0]['text']
+        
+        return response_content
+
+    async def spinner(self, processing_done):
+        while not processing_done.done():
+            await show_spinner(processing_done)
+
+    async def fetch_with_loader(self, llm_body):
+        processing_done = asyncio.Future()
+        spinner_task = asyncio.create_task(self.spinner(processing_done))
+
+        try:
+            response = await self.generate_response(llm_body)
+            processing_done.set_result(True)
+            return response
+        except Exception as e:
+            processing_done.set_exception(e)
+        finally:
+            await spinner_task
+
     def get_llm_body(self, chat_history, max_tokens=8000, temperature=0.5):
         system_prompt = """
         You are a CIP assistant responsible for helping the user effectively communicate their potato germplasm needs to the CIP Gene Bank. Your goal is to gather all the necessary information from the user and formulate a comprehensive request to CIP, reducing the need for extended back-and-forth communication.
@@ -224,54 +223,3 @@ class BedrockClaudeAdapter():
         
         bedrock_payload = self.generate_llm_payload(system_prompt=system_prompt, messages=chat_history, max_tokens=max_tokens, temperature=temperature)
         return bedrock_payload
-
-    async def generate_response(self, llm_body):
-        accept = 'application/json'
-        contentType = 'application/json'
-
-        response = await asyncio.to_thread(self.client.invoke_model, body=llm_body, modelId=self.model_id, accept=accept, contentType=contentType)
-        response_body = json.loads(response['body'].read())
-        response_content = response_body['content'][0]['text']
-        
-        return response_content
-
-    async def spinner(self, processing_done):
-        chatbotAvatar = chatbotAvatar_ref
-        placeholder = st.empty()
-        typing_animation = itertools.cycle(["Typing", "Typing.", "Typing..", "Typing..."])
-        
-        while not processing_done.done():
-            html_content = f"""
-                <div style="display: flex; align-items: center; margin-bottom: 10px; justify-content:flex-start;">
-                    <img src="data:image/svg+xml;base64,{chatbotAvatar}" class="bot-avatar" alt="avatar" style="width: 40px; height: 40px;" />
-                    <div style="background: {assistantBackgroundColor}; color: {assistantTextColor}; border-radius: 20px; padding: 10px; margin-right: 5px; max-width: 75%; font-size: 14px;">
-                        {next(typing_animation)} 
-                    </div>
-                </div>
-            """
-            placeholder.markdown(html_content, unsafe_allow_html=True)
-            await asyncio.sleep(0.5)
-        
-        placeholder.empty()
-
-
-    async def fetch_with_loader(self, llm_body):
-        processing_done = asyncio.Future()
-        spinner_task = asyncio.create_task(self.spinner(processing_done))
-
-        try:
-            response = await self.generate_response(llm_body)
-            processing_done.set_result(True)
-            return response
-        except Exception as e:
-            processing_done.set_exception(e)
-        finally:
-            await spinner_task
-
-    # Usage
-# async def main():
-#     adapter = BedrockClaudeAdapter()
-#     llm_body = adapter.get_llm_body(chat_history=[{"role": "user", "content": "I need help with my potato crops."}])
-#     response = await adapter.fetch_with_loader(llm_body)
-#     print("API Response:", response)
-
