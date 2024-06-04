@@ -60,7 +60,7 @@ def message_func(text, is_user=False, is_df=False, model="gpt", phi=False):
                 <div style="display: flex; align-items: center; margin-bottom: 10px; justify-content:flex-end;">
                     <div style="background: {userBackgroundColor}; color: {userTextColor}; border-radius: 20px; padding: 10px; margin-right: 5px; max-width: 75%; font-size: 14px;">
                         {text} \n </div>
-                    <img src="data:image/svg+xml;base64,{chatbotAvatar}" class="{avatar_class}" alt="avatar" style="width: 40px; height: 40px;" />
+                    <img src="data:image/svg+xml;base64,{userAvatar}" class="{avatar_class}" alt="avatar" style="width: 40px; height: 40px;" />
                 </div>
                 """,
             unsafe_allow_html=True,
@@ -70,7 +70,7 @@ def message_func(text, is_user=False, is_df=False, model="gpt", phi=False):
         st.write(
             f"""
                     <div style="display: flex; align-items: center; margin-bottom: 10px; justify-content:flex-start;">
-                    <img src="data:image/svg+xml;base64,{userAvatar}" class="{avatar_class}" alt="avatar" style="width: 40px; height: 40px;" />
+                    <img src="data:image/svg+xml;base64,{chatbotAvatar}" class="{avatar_class}" alt="avatar" style="width: 40px; height: 40px;" />
                     <div style="background: {assistantBackgroundColor}; color: {assistantTextColor}; border-radius: 20px; padding: 10px; margin-right: 5px; max-width: 75%; font-size: 14px;">
                         {text} \n </div>
                 </div>

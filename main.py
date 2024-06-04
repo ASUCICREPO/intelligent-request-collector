@@ -8,6 +8,7 @@ from io import BytesIO
 from pypdf import PdfReader
 from adapters.BedrockClaudeAdapter import BedrockClaudeAdapter
 from managers.MessageHandler import MessageHandler
+import asyncio
 
 chat_API = ""  # api goes here
 
@@ -142,16 +143,18 @@ def app():
         )
 
         try:
-            llm_payload = llm_adapter.get_llm_body(st.session_state.messages)
-            llm_response = llm_adapter.generate_response(llm_payload)
-            print(llm_response)
-            st.session_state.messages = msg_handler.AIchatFormat(llm_response, st.session_state.messages)
-            friendly_msg=msg_handler.parse_bot_response(llm_response)
+            async def main():
+                llm_payload = llm_adapter.get_llm_body(st.session_state.messages)
+                llm_response =await llm_adapter.fetch_with_loader(llm_payload)
+                st.session_state.messages = msg_handler.AIchatFormat(llm_response, st.session_state.messages)
+                friendly_msg=msg_handler.parse_bot_response(llm_response)
 
-            message_func(
-                text=friendly_msg,
-                is_user=False
-            )
+                message_func(
+                    text=friendly_msg,
+                    is_user=False
+                )
+            asyncio.run(main())
+
         except Exception as e:
             print(str(e))
             string_response="I'm having some issues currently."
