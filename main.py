@@ -74,13 +74,13 @@ def app():
     # Display chat messages from history on app rerun
     for message in st.session_state.messages:
         if ((message['role'] == "user")):
-            content_val = message
+            content_val = message['content'][0]['text']
             message_func(
                 text=content_val,
                 is_user=True
             )
         elif ((message['role'] == "assistant")):
-            content_val = message
+            content_val = msg_handler.parse_bot_response(message['content'][0]['text'])
             message_func(
                 text=content_val,
                 is_user=False
