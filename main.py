@@ -69,7 +69,22 @@ def app():
 
     # Initialize chat history
     if "messages" not in st.session_state:
-        st.session_state.messages = [{'role': 'user', 'content': [{'type': 'text', 'text': "Hi"}]}, {'role': 'assistant', 'content': [{'type': 'text', 'text': "<Response> Hello! I'm your CIP assistant, here to support you with your important potato germplasm needs. Please share your specific requirements, and I'll handle the rest. </Response>"}]}]
+        st.session_state.messages = [
+            {
+                'role': 'user', 
+                'content': [{
+                    'type': 'text', 
+                    'text': "Hi"
+                }]
+            }, 
+            {
+                'role': 'assistant', 
+                'content': [{
+                    'type': 'text', 
+                    'text': "<Response> Hello! I'm your CIP assistant, here to support you with your important potato germplasm needs. Please share your specific requirements, and I'll handle the rest. </Response>"
+                 }]
+            }
+        ]
 
     # Display chat messages from history on app rerun
     for idx, message in enumerate(st.session_state.messages):
