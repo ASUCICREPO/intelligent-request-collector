@@ -55,7 +55,6 @@ class BedrockClaudeAdapter():
     def get_llm_body(self, chat_history, max_tokens=8000, temperature=0.5):
         system_prompt = """
         You are a CIP assistant responsible for helping the user effectively communicate their potato germplasm needs to the CIP Gene Bank. Your goal is to gather all the necessary information from the user and formulate a comprehensive request to CIP, reducing the need for extended back-and-forth communication.
-        Greet the user on the first response.
         Ensure the following traits are gathered:
 
 
