@@ -69,11 +69,26 @@ def app():
 
     # Initialize chat history
     if "messages" not in st.session_state:
-        st.session_state.messages = []
+        st.session_state.messages = [
+            {
+                'role': 'user', 
+                'content': [{
+                    'type': 'text', 
+                    'text': "Hi"
+                }]
+            }, 
+            {
+                'role': 'assistant', 
+                'content': [{
+                    'type': 'text', 
+                    'text': "<Response> Hello! I'm your CIP assistant, here to support you with your important potato germplasm needs. Please share your specific requirements, and I'll handle the rest. </Response>"
+                 }]
+            }
+        ]
 
     # Display chat messages from history on app rerun
-    for message in st.session_state.messages:
-        if ((message['role'] == "user")):
+    for idx, message in enumerate(st.session_state.messages):
+        if ((message['role'] == "user") and idx != 0):
             content_val = message['content'][0]['text']
             message_func(
                 text=content_val,
@@ -85,6 +100,7 @@ def app():
                 text=content_val,
                 is_user=False
             )
+            
 
     # Create two columns
     col1, col2 = st.columns([0.34, 4])
