@@ -1,9 +1,6 @@
 import streamlit as st
 import re
 
-
-
-
 def is_email_valid(email):
     pattern=r'^[\w\.-]+@[\w\.-]+\.\w+$'
 
@@ -18,19 +15,13 @@ def app():
     def verify_email(email):
         return is_email_valid(email)
 
-    emails= ["example@gmail.com", 'epython.com', 'epython@info.com', 'ep-info.com', 'ep-info@gmail.com']
-
-
     if "email" not in st.session_state:
         st.session_state.email = None
-
-
 
     if  st.session_state.email is None:
         st.write("# Welcome!")
         
         email = st.text_input("Email")
-    
         
         if st.button("Proceed to Chatbot"):
             if verify_email(email):
