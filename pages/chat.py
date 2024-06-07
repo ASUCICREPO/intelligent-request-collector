@@ -16,13 +16,6 @@ msg_handler = MessageHandler()
 llm_adapter = BedrockClaudeAdapter()
 
 def app():
-    st.set_page_config(
-        page_title="Login Page",
-        page_icon="🔐",
-        layout="wide", 
-        initial_sidebar_state="expanded"  
-    )
-
     pages = ["CGIAR"]
 
     logo_path = "./static/CustomerLogo.svg"

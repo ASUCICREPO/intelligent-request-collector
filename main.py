@@ -12,52 +12,35 @@ def is_email_valid(email):
     else:
         return False
 
+def app():
+    st.write("International Potato Center")
 
-st.set_page_config(
-    page_title="Login Page",
-    page_icon="🔐",
-    layout="wide", 
-    initial_sidebar_state="collapsed"  
-)
+    def verify_email(email):
+        return is_email_valid(email)
 
-
-st.markdown(
-    """
-<style>
-    [data-testid="collapsedControl"] {
-        display: none
-    }
-</style>
-""",
-    unsafe_allow_html=True,
-)
+    emails= ["example@gmail.com", 'epython.com', 'epython@info.com', 'ep-info.com', 'ep-info@gmail.com']
 
 
-st.write("International Potato Center")
-
-def verify_email(email):
-    return is_email_valid(email)
-
-emails= ["example@gmail.com", 'epython.com', 'epython@info.com', 'ep-info.com', 'ep-info@gmail.com']
-
-
-if "email" not in st.session_state:
-    st.session_state.email = None
+    if "email" not in st.session_state:
+        st.session_state.email = None
 
 
 
-if  st.session_state.email is None:
-    st.write("# Welcome!")
+    if  st.session_state.email is None:
+        st.write("# Welcome!")
+        
+        email = st.text_input("Email")
     
-    email = st.text_input("Email")
-   
-    
-    if st.button("Proceed to Chatbot"):
-        if verify_email(email):
-            is_valid= is_email_valid(email)
-            st.session_state.email = email
-            #page switching logic 
-            st.success("Login successful!")
-            st.switch_page("pages/chat.py")
-        else:
-            st.error("Invalid email")
+        
+        if st.button("Proceed to Chatbot"):
+            if verify_email(email):
+                is_valid= is_email_valid(email)
+                st.session_state.email = email
+                #page switching logic 
+                st.success("Starting new chat...")
+                st.switch_page("pages/chat.py")
+            else:
+                st.error("Invalid email")
+
+if __name__ == '__main__':
+    app()
