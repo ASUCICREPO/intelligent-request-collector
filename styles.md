@@ -1,5 +1,16 @@
 <style>
+    .stChatMessage:nth-child(odd) {
+        background-color: rgb(253, 240, 225) !important; /* Change to your desired color */
+    }
+    /* Style for user's chat message (assuming the second message is always from the user) */
+    .stChatMessage:nth-child(even) {
+        background-color: rgb(247,248,250) !important;
+    }
 
+    [data-testid="stChatMessage"] img {
+        width: 40px; /* Set your desired width here */
+        height: 40px;
+    }
 
     /* Gradient text styles for headers */
     h1, h2 {

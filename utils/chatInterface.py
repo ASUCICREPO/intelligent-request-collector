@@ -48,7 +48,7 @@ async def show_spinner(processing_done):
     
     while not processing_done.done():
         html_content = f"""
-            <div style="display: flex; align-items: center; margin-bottom: 10px; justify-content:flex-start;">
+            <div style="display: flex; align-items: center; margin-bottom: 10px; padding-left:16px;justify-content:flex-start;">
                 <img src="data:image/svg+xml;base64,{chatbotAvatar}" class="bot-avatar" alt="avatar" style="width: 40px; height: 40px;" />
                 <div style="background: {assistantBackgroundColor}; color: {assistantTextColor}; border-radius: 20px; padding: 10px; margin-right: 5px; max-width: 75%; font-size: 14px;">
                     {next(typing_animation)} 
@@ -61,3 +61,6 @@ async def show_spinner(processing_done):
     placeholder.empty()
 
 __all__ = ['show_spinner']
+
+
+
