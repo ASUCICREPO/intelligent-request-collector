@@ -94,7 +94,7 @@ def app():
         ]
 
     prompt=st.chat_input("Type your query here...", disabled=st.session_state.disabled, on_submit=disable)
-    attachment = st.file_uploader("Attach a file (optional)", type=["jpg", "png", "pdf"])
+    attachment = st.file_uploader("Attach a file (optional)", type=["jpg", "png", "pdf"], disabled=st.session_state.disabled)
     print(attachment) 
     
     # Display chat messages from history on app rerun
