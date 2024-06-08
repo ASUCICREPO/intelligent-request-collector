@@ -1,13 +1,5 @@
 <style>
-    /* Style for the input container at the bottom of the page */
-    #input-container {
-        position: fixed;
-        bottom: 0;
-        width: 100%;
-        padding: 10px;
-        background-color: #F5F8FE;
-        z-index: 100; /* Ensures it is on top of other elements */
-    }
+
 
     /* Gradient text styles for headers */
     h1, h2 {
@@ -41,14 +33,6 @@
         object-fit: cover;
     }
 
-    /* Styles for horizontal blocks in Streamlit */
-    div[data-testid="stHorizontalBlock"] {
-        bottom: 0px;
-        position: fixed;
-        width: inherit;
-        display: flex;
-        align-items: baseline;
-    }
 
     /* Adjusts padding for sidebar user content */
     div[data-testid="stSidebarUserContent"] {
@@ -64,12 +48,7 @@
         box-shadow: none;
     }
 
-    /* Main section adjustments */
-    section.main {
-        pointer-events: auto;
-        position: relative;
-        top: 5rem;
-    }
+
 
     /* Styles for the navigation bar iframe */
     iframe[title="streamlit_navigation_bar.st_navbar"] {
