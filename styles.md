@@ -1,12 +1,15 @@
 <style>
-    /* Style for the input container at the bottom of the page */
-    #input-container {
-        position: fixed;
-        bottom: 0;
-        width: 100%;
-        padding: 10px;
-        background-color: #F5F8FE;
-        z-index: 100; /* Ensures it is on top of other elements */
+    .stChatMessage:nth-child(odd) {
+        background-color: rgb(253, 240, 225) !important; /* Change to your desired color */
+    }
+    /* Style for user's chat message (assuming the second message is always from the user) */
+    .stChatMessage:nth-child(even) {
+        background-color: rgb(247,248,250) !important;
+    }
+
+    [data-testid="stChatMessage"] img {
+        width: 40px; /* Set your desired width here */
+        height: 40px;
     }
 
     /* Gradient text styles for headers */
@@ -41,14 +44,6 @@
         object-fit: cover;
     }
 
-    /* Styles for horizontal blocks in Streamlit */
-    div[data-testid="stHorizontalBlock"] {
-        bottom: 0px;
-        position: fixed;
-        width: inherit;
-        display: flex;
-        align-items: baseline;
-    }
 
     /* Adjusts padding for sidebar user content */
     div[data-testid="stSidebarUserContent"] {
@@ -64,12 +59,7 @@
         box-shadow: none;
     }
 
-    /* Main section adjustments */
-    section.main {
-        pointer-events: auto;
-        position: relative;
-        top: 5rem;
-    }
+
 
     /* Styles for the navigation bar iframe */
     iframe[title="streamlit_navigation_bar.st_navbar"] {

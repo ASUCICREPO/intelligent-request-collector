@@ -38,45 +38,6 @@ assistantBackgroundColor = custom_theme["theme"]["assistantBackgroundColor"]
 chatbotAvatar_ref = encode_svg("./static/ChatbotAvatar.svg")
 userAvatar_ref = encode_svg("./static/UserAvatar.svg")
 
-
-def message_func(text, is_user=False, is_df=False, model="gpt", phi=False):
-    """
-    This function is used to display the messages in the chatbot UI.
-
-    Parameters:
-    text (str): The text to be displayed.
-    is_user (bool): Whether the message is from the user or not.
-    is_df (bool): Whether the message is a dataframe or not.
-    """
-    chatbotAvatar = chatbotAvatar_ref
-
-    userAvatar = userAvatar_ref
-    if is_user:
-        userAvatar = userAvatar_ref
-        avatar_class = "user-avatar"
-        st.write(
-            f"""
-                <div style="display: flex; align-items: center; margin-bottom: 10px; justify-content:flex-end;">
-                    <div style="background: {userBackgroundColor}; color: {userTextColor}; border-radius: 20px; padding: 10px; margin-right: 5px; max-width: 75%; font-size: 14px;">
-                        {text} \n </div>
-                    <img src="data:image/svg+xml;base64,{userAvatar}" class="{avatar_class}" alt="avatar" style="width: 40px; height: 40px;" />
-                </div>
-                """,
-            unsafe_allow_html=True,
-        )
-    else:
-        avatar_class = "bot-avatar"
-        st.write(
-            f"""
-                    <div style="display: flex; align-items: center; margin-bottom: 10px; justify-content:flex-start;">
-                    <img src="data:image/svg+xml;base64,{chatbotAvatar}" class="{avatar_class}" alt="avatar" style="width: 40px; height: 40px;" />
-                    <div style="background: {assistantBackgroundColor}; color: {assistantTextColor}; border-radius: 20px; padding: 10px; margin-right: 5px; max-width: 75%; font-size: 14px;">
-                        {text} \n </div>
-                </div>
-                    """,
-            unsafe_allow_html=True,
-        )
-
 async def show_spinner(processing_done):
     chatbotAvatar = chatbotAvatar_ref
     placeholder = st.empty()
@@ -87,7 +48,7 @@ async def show_spinner(processing_done):
     
     while not processing_done.done():
         html_content = f"""
-            <div style="display: flex; align-items: center; margin-bottom: 10px; justify-content:flex-start;">
+            <div style="display: flex; align-items: center; margin-bottom: 10px; padding-left:16px;justify-content:flex-start;">
                 <img src="data:image/svg+xml;base64,{chatbotAvatar}" class="bot-avatar" alt="avatar" style="width: 40px; height: 40px;" />
                 <div style="background: {assistantBackgroundColor}; color: {assistantTextColor}; border-radius: 20px; padding: 10px; margin-right: 5px; max-width: 75%; font-size: 14px;">
                     {next(typing_animation)} 
@@ -100,3 +61,6 @@ async def show_spinner(processing_done):
     placeholder.empty()
 
 __all__ = ['show_spinner']
+
+
+
