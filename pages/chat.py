@@ -15,6 +15,14 @@ chat_API = ""  # api goes here
 msg_handler = MessageHandler()
 llm_adapter = BedrockClaudeAdapter()
 
+
+if "disabled" not in st.session_state:
+    st.session_state["disabled"] = False
+
+def disable():
+    st.session_state["disabled"] = True
+
+
 def app():
     pages = ["CGIAR"]
 
@@ -143,7 +151,7 @@ def app():
         prompt = ""
         # Display a text box for input at the bottom
         with st.container():
-            prompt = st.chat_input("Type your query here...")
+            prompt = st.chat_input("Type your query here...", disabled=st.session_state.disabled, on_submit=disable)
             print(prompt)
             button_b_pos = "1rem"
             button_css = float_css_helper(
@@ -181,6 +189,8 @@ def app():
                 text=string_response,
                 is_user=False
             )
+        st.session_state["disabled"] = False
+        st.rerun()
 
 if __name__ == '__main__':
     app()
