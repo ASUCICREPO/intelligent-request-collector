@@ -12,7 +12,7 @@ def is_email_valid(email):
 def app():
     styles="""
         <style>
-    [aria-label="Email"] {
+    [aria-label="Your Email"] {
         border:1px solid #f47a1f;
     }       
         </style>
@@ -26,6 +26,7 @@ def app():
     if  st.session_state.email is None:
         st.write("# Welcome!")
         
+        st.warning('This is prototype level code demonstrating technical feasibility. This is not suitable for production environments and provided as-is and without warranties.', icon="⚠️")
         email = st.text_input("Your Email",placeholder="Please enter a valid email address")
         
         if st.button("Proceed to Chatbot"):
