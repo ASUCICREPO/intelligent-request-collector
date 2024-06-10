@@ -10,10 +10,15 @@ def is_email_valid(email):
         return False
 
 def app():
+    styles="""
+        <style>
+    [aria-label="Email"] {
+        border:1px solid #f47a1f;
+    }       
+        </style>
+    """
     st.write("International Potato Center")
-
-    def verify_email(email):
-        return is_email_valid(email)
+    st.write(styles, unsafe_allow_html=True)
 
     if "email" not in st.session_state:
         st.session_state.email = None
@@ -21,10 +26,10 @@ def app():
     if  st.session_state.email is None:
         st.write("# Welcome!")
         
-        email = st.text_input("Email")
+        email = st.text_input("Your Email",placeholder="Please enter a valid email address")
         
         if st.button("Proceed to Chatbot"):
-            if verify_email(email):
+            if is_email_valid(email):
                 is_valid= is_email_valid(email)
                 st.session_state.email = email
                 #page switching logic 
@@ -32,6 +37,6 @@ def app():
                 st.switch_page("pages/chat.py")
             else:
                 st.error("Invalid email")
-
+    
 if __name__ == '__main__':
     app()
