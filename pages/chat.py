@@ -8,6 +8,10 @@ from pypdf import PdfReader
 from adapters.BedrockClaudeAdapter import BedrockClaudeAdapter
 from managers.MessageHandler import MessageHandler
 import asyncio
+from managers.S3FileHandler import S3Handler
+
+# Initializing S3Handler Class
+S3Handler_1 = S3Handler()
 
 chat_API = ""  # api goes here
 
@@ -24,6 +28,9 @@ def disable():
 
 def app():
     pages = ["CGIAR"]
+
+    #Initializing the memory to store a list of attached files by the user
+    st.session_state.attached_files = []
 
     logo_path = "./static/CustomerLogo.svg"
     urls = {"CGIAR": "https://www.cgiar.org/"}
@@ -95,8 +102,28 @@ def app():
 
     prompt=st.chat_input("Type your query here...", disabled=st.session_state.disabled, on_submit=disable)
     attachment = st.file_uploader("Attach a file (optional)", type=["jpg", "png", "pdf"], disabled=st.session_state.disabled)
-    print(attachment) 
-    
+    if attachment is not None:
+        print(attachment) 
+
+        ## Commented this as it is not providing any usage.
+
+        # reader = PdfReader(attachment)
+        
+        # # Initialize an empty string to hold the extracted text
+        # full_text = ""
+        
+        # # Iterate over all pages in the PDF
+        # for page_num in range(len(reader.pages)):
+        #     page = reader.pages[page_num]
+        #     page_text = page.extract_text()
+            
+        #     if page_text:
+        #         full_text += page_text
+        
+        S3Handler_1.upload_files(file_objects=[attachment])
+        st.session_state.attached_files.append(S3Handler_1.uploaded_files[attachment.name])
+        st.success("File Upload Success!", icon="✅")
+
     # Display chat messages from history on app rerun
     with st.container(border=False):
         for idx, message in enumerate(st.session_state.messages):

@@ -5,6 +5,7 @@ class S3Handler:
         self.s3_client = boto3.client('s3', region_name=region_name)
         self.bucket_name = bucket_name
         self.dynamo_table_name = dynamo_table_name
+        self.uploaded_files = {}
         
         #For future use
         # self.dynamodb = boto3.resource('dynamodb', region_name=region_name)
@@ -18,12 +19,11 @@ class S3Handler:
                     Bucket=self.bucket_name
                 )
 
-        uploaded_files = {}
         for file_object in file_objects:
             try:
                 file_key = file_object.name
                 self.s3_client.upload_fileobj(file_object, self.bucket_name, file_key)
                 s3_path = f"s3://{self.bucket_name}/{file_key}"
-                uploaded_files[file_key] = s3_path
+                self.uploaded_files[file_key] = s3_path
             except Exception as e:
                 print(f"An error occurred: {e}")
