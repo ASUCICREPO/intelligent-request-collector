@@ -1,8 +1,4 @@
 import boto3
-from dotenv import load_dotenv
-import os
-
-load_dotenv()
 
 class S3Handler:
     def __init__(self,uuid, region_name, bucket_name, dynamo_table_name):

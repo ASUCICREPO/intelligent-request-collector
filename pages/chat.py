@@ -7,7 +7,10 @@ import uuid
 from adapters.BedrockClaudeAdapter import BedrockClaudeAdapter
 from managers.MessageHandler import MessageHandler
 from managers.S3FileHandler import S3Handler
-import os 
+from dotenv import load_dotenv
+import os
+
+load_dotenv()
 
 st.session_state.uuid = uuid.uuid4().hex
 
