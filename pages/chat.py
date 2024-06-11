@@ -2,9 +2,6 @@ import streamlit as st
 from streamlit_navigation_bar import st_navbar
 from streamlit_float import *
 from components.attach_doc import attach_doc_component
-import base64
-from io import BytesIO
-from pypdf import PdfReader
 from adapters.BedrockClaudeAdapter import BedrockClaudeAdapter
 from managers.MessageHandler import MessageHandler
 import asyncio
@@ -104,21 +101,6 @@ def app():
     attachment = st.file_uploader("Attach a file (optional)", type=["jpg", "png", "pdf"], disabled=st.session_state.disabled)
     if attachment is not None:
         print(attachment) 
-
-        ## Commented this as it is not providing any usage.
-
-        # reader = PdfReader(attachment)
-        
-        # # Initialize an empty string to hold the extracted text
-        # full_text = ""
-        
-        # # Iterate over all pages in the PDF
-        # for page_num in range(len(reader.pages)):
-        #     page = reader.pages[page_num]
-        #     page_text = page.extract_text()
-            
-        #     if page_text:
-        #         full_text += page_text
         
         S3Handler_1.upload_files(file_objects=[attachment])
         st.session_state.attached_files.append(S3Handler_1.uploaded_files[attachment.name])
