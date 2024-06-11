@@ -3,7 +3,6 @@ from streamlit_navigation_bar import st_navbar
 from streamlit_float import *
 from components.attach_doc import attach_doc_component
 import asyncio
-import uuid
 from adapters.BedrockClaudeAdapter import BedrockClaudeAdapter
 from managers.MessageHandler import MessageHandler
 from managers.S3FileHandler import S3Handler
@@ -12,10 +11,22 @@ import os
 
 load_dotenv()
 
-st.session_state.uuid = uuid.uuid4().hex
 
 # Initializing S3Handler Class
-S3Handler_1 = S3Handler(st.session_state.uuid, region_name=os.getenv('REGION_NAME'), bucket_name=os.getenv('BUCKET_NAME'), dynamo_table_name = os.getenv('DYNAMO_TABLE_NAME'))
+bucket_name=os.getenv('BUCKET_NAME') # required
+region_name=os.getenv('REGION_NAME') or None 
+dynamo_table_name=os.getenv('DYNAMO_TABLE_NAME') or None
+
+# prevent direct entry to chat page
+if "uuid" not in st.session_state:
+    st.switch_page("main.py")
+else:
+    print("UUID: ",st.session_state.uuid)
+    S3Handler_ = S3Handler(
+        uuid=st.session_state.uuid, 
+        bucket_name=bucket_name,
+        region=region_name,
+        dynamo_table_name=dynamo_table_name )
 
 chat_API = ""  # api goes here
 
@@ -109,9 +120,9 @@ def app():
     if len(attachments) >= 1:
         print(attachments) 
         
-        S3Handler_1.upload_files(file_objects=attachments)
+        S3Handler_.upload_files(file_objects=attachments)
         for attachment in attachments:
-            st.session_state.attached_files.append(S3Handler_1.uploaded_files[st.session_state.uuid+'/'+attachment.name])
+            st.session_state.attached_files.append(S3Handler_.uploaded_files[st.session_state.uuid+'/'+attachment.name])
         st.success("File Upload Success!", icon="✅")
 
     # Display chat messages from history on app rerun

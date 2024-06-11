@@ -17,3 +17,10 @@ export AWS_SESSION_TOKEN={REDACT}
 
 streamlit run main.py
 ```
+
+**Sample .env**
+```
+REGION_NAME=""
+BUCKET_NAME=""
+DYNAMODB_TABLE_NAME=""
+```

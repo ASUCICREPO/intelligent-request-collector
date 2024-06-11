@@ -1,8 +1,8 @@
 import boto3
 
 class S3Handler:
-    def __init__(self,uuid, region_name, bucket_name, dynamo_table_name):
-        self.s3_client = boto3.client('s3', region_name=region_name)
+    def __init__(self,uuid, bucket_name, region='us-east-1', dynamo_table_name=None):
+        self.s3_client = boto3.client('s3', region_name=region)
         self.bucket_name = bucket_name
         self.dynamo_table_name = dynamo_table_name
         self.uploaded_files = {}

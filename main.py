@@ -1,5 +1,7 @@
 import streamlit as st
 import re
+import uuid
+
 
 def is_email_valid(email):
     pattern=r'^[\w\.-]+@[\w\.-]+\.\w+$'
@@ -22,6 +24,7 @@ def app():
 
     if "email" not in st.session_state:
         st.session_state.email = None
+        st.session_state.uuid = None
 
     if  st.session_state.email is None:
         st.write("# Welcome!")
@@ -33,6 +36,7 @@ def app():
             if is_email_valid(email):
                 is_valid= is_email_valid(email)
                 st.session_state.email = email
+                st.session_state.uuid = uuid.uuid4().hex
                 #page switching logic 
                 st.success("Starting new chat...")
                 st.switch_page("pages/chat.py")
