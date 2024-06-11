@@ -7,11 +7,12 @@ import uuid
 from adapters.BedrockClaudeAdapter import BedrockClaudeAdapter
 from managers.MessageHandler import MessageHandler
 from managers.S3FileHandler import S3Handler
+import os 
 
 st.session_state.uuid = uuid.uuid4().hex
 
 # Initializing S3Handler Class
-S3Handler_1 = S3Handler(st.session_state.uuid)
+S3Handler_1 = S3Handler(st.session_state.uuid, region_name=os.getenv('REGION_NAME'), bucket_name=os.getenv('BUCKET_NAME'), dynamo_table_name = os.getenv('DYNAMO_TABLE_NAME'))
 
 chat_API = ""  # api goes here
 
