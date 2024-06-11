@@ -2,13 +2,16 @@ import streamlit as st
 from streamlit_navigation_bar import st_navbar
 from streamlit_float import *
 from components.attach_doc import attach_doc_component
+import asyncio
+import uuid
 from adapters.BedrockClaudeAdapter import BedrockClaudeAdapter
 from managers.MessageHandler import MessageHandler
-import asyncio
 from managers.S3FileHandler import S3Handler
 
+st.session_state.uuid = uuid.uuid4().hex
+
 # Initializing S3Handler Class
-S3Handler_1 = S3Handler()
+S3Handler_1 = S3Handler(st.session_state.uuid)
 
 chat_API = ""  # api goes here
 
@@ -98,12 +101,13 @@ def app():
         ]
 
     prompt=st.chat_input("Type your query here...", disabled=st.session_state.disabled, on_submit=disable)
-    attachment = st.file_uploader("Attach a file (optional)", type=["jpg", "png", "pdf"], disabled=st.session_state.disabled)
-    if attachment is not None:
-        print(attachment) 
+    attachments = st.file_uploader("Attach a file (optional)", type=["jpg", "png", "pdf"], disabled=st.session_state.disabled, accept_multiple_files= True)
+    if len(attachments) >= 1:
+        print(attachments) 
         
-        S3Handler_1.upload_files(file_objects=[attachment])
-        st.session_state.attached_files.append(S3Handler_1.uploaded_files[attachment.name])
+        S3Handler_1.upload_files(file_objects=attachments)
+        for attachment in attachments:
+            st.session_state.attached_files.append(S3Handler_1.uploaded_files[st.session_state.uuid+'/'+attachment.name])
         st.success("File Upload Success!", icon="✅")
 
     # Display chat messages from history on app rerun
