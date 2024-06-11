@@ -2,12 +2,31 @@ import streamlit as st
 from streamlit_navigation_bar import st_navbar
 from streamlit_float import *
 from components.attach_doc import attach_doc_component
-import base64
-from io import BytesIO
-from pypdf import PdfReader
+import asyncio
 from adapters.BedrockClaudeAdapter import BedrockClaudeAdapter
 from managers.MessageHandler import MessageHandler
-import asyncio
+from managers.S3FileHandler import S3Handler
+from dotenv import load_dotenv
+import os
+
+load_dotenv()
+
+
+# Initializing S3Handler Class
+bucket_name=os.getenv('BUCKET_NAME') # required
+region_name=os.getenv('REGION_NAME') or None 
+dynamo_table_name=os.getenv('DYNAMO_TABLE_NAME') or None
+
+# prevent direct entry to chat page
+if "uuid" not in st.session_state:
+    st.switch_page("main.py")
+else:
+    print("UUID: ",st.session_state.uuid)
+    S3Handler_ = S3Handler(
+        uuid=st.session_state.uuid, 
+        bucket_name=bucket_name,
+        region=region_name,
+        dynamo_table_name=dynamo_table_name )
 
 chat_API = ""  # api goes here
 
@@ -24,6 +43,9 @@ def disable():
 
 def app():
     pages = ["CGIAR"]
+
+    #Initializing the memory to store a list of attached files by the user
+    st.session_state.attached_files = []
 
     logo_path = "./static/CustomerLogo.svg"
     urls = {"CGIAR": "https://www.cgiar.org/"}
@@ -94,9 +116,15 @@ def app():
         ]
 
     prompt=st.chat_input("Type your query here...", disabled=st.session_state.disabled, on_submit=disable)
-    attachment = st.file_uploader("Attach a file (optional)", type=["jpg", "png", "pdf"], disabled=st.session_state.disabled)
-    print(attachment) 
-    
+    attachments = st.file_uploader("Attach a file (optional)", type=["jpg", "png", "pdf"], disabled=st.session_state.disabled, accept_multiple_files= True)
+    if len(attachments) >= 1:
+        print(attachments) 
+        
+        S3Handler_.upload_files(file_objects=attachments)
+        for attachment in attachments:
+            st.session_state.attached_files.append(S3Handler_.uploaded_files[st.session_state.uuid+'/'+attachment.name])
+        st.success("File Upload Success!", icon="✅")
+
     # Display chat messages from history on app rerun
     with st.container(border=False):
         for idx, message in enumerate(st.session_state.messages):
