@@ -34,7 +34,7 @@ class EmailHandler:
                 },
                 'Subject': {
                     'Charset': 'UTF-8',
-                    'Data': subject,
+                    'Data': f"{subject}: {self.uuid}",
                 },
             },
             Source='mmaddur1@asu.edu'

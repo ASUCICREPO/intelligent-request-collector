@@ -155,6 +155,17 @@ def app():
                     if "Got everything I need" in friendly_msg:
                         stored_table = msg_handler.get_stored_table(llm_response)
                         email_handler.send_email(body=stored_table)
+                        st.session_state.messages.append({
+                            'role': 'assistant', 
+                            'content': [{
+                                'type': 'text', 
+                                'text': "<Response> An email with your request has been sent to CIP. If you'd like to start a new request go to http://localhost:8501. </Response>"
+                            }]
+                        })
+                        with st.chat_message("assistant",avatar='static/ChatbotAvatar.svg'):
+                            st.markdown("An email with your request has been sent to CIP. If you'd like to start a new request go to http://localhost:8501.")
+                        disable()
+                        st.rerun()
     
                     with st.chat_message("assistant",avatar='static/ChatbotAvatar.svg'):
                         st.markdown(friendly_msg)
