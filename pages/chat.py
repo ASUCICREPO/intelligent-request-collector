@@ -9,12 +9,30 @@ from managers.S3FileHandler import S3Handler
 from managers.EmailHandler import EmailHandler
 from dotenv import load_dotenv
 import os
+import logging
 
 load_dotenv()
 
 
+# Create a logger
+logger = logging.getLogger(__name__)
+logger.setLevel(logging.DEBUG)
+
+# Create a file handler
+file_handler = logging.FileHandler('chat.log')
+file_handler.setLevel(logging.INFO)
+
+# Create a formatter and add it to the file handler
+formatter = logging.Formatter('%(asctime)s - %(levelname)s - %(message)s')
+file_handler.setFormatter(formatter)
+
+# Add the file handler to the logger
+logger.addHandler(file_handler)
+
+
 # Initializing S3Handler Class
 bucket_name=os.getenv('BUCKET_NAME') # required
+from_email=os.getenv('FROM_EMAIL') # required
 region_name=os.getenv('REGION_NAME') or None 
 dynamo_table_name=os.getenv('DYNAMO_TABLE_NAME') or None
 
@@ -22,18 +40,19 @@ dynamo_table_name=os.getenv('DYNAMO_TABLE_NAME') or None
 if "uuid" not in st.session_state:
     st.switch_page("main.py")
 else:
-    print("UUID: ",st.session_state.uuid)
+    logger.debug("UUID: %s",st.session_state.uuid)
     S3Handler_ = S3Handler(
         uuid=st.session_state.uuid, 
         bucket_name=bucket_name,
+        logger=logger,
         region=region_name,
         dynamo_table_name=dynamo_table_name )
 
 chat_API = ""  # api goes here
 
-msg_handler = MessageHandler()
+msg_handler = MessageHandler(logger=logger)
 llm_adapter = BedrockClaudeAdapter()
-email_handler = EmailHandler(uuid=st.session_state.uuid, email=st.session_state.email)
+email_handler = EmailHandler(uuid=st.session_state.uuid, email=st.session_state.email,from_email=from_email)
 
 if "disabled" not in st.session_state:
     st.session_state["disabled"] = False
@@ -119,7 +138,7 @@ def app():
     prompt=st.chat_input("Type your query here...", disabled=st.session_state.disabled, on_submit=disable)
     attachments = st.file_uploader("Attach a file (optional)", type=["jpg", "png", "pdf"], disabled=st.session_state.disabled, accept_multiple_files= True)
     if len(attachments) >= 1:
-        print(attachments) 
+        logger.debug("%s",attachments) 
         
         S3Handler_.upload_files(file_objects=attachments)
         for attachment in attachments:
@@ -128,6 +147,7 @@ def app():
 
     # Display chat messages from history on app rerun
     with st.container(border=False):
+        logger.debug("%s",st.session_state.messages)
         for idx, message in enumerate(st.session_state.messages):
             if message['role'] == "user" and idx != 0:
                 content_val = message['content'][0]['text']
@@ -173,7 +193,7 @@ def app():
                 asyncio.run(llm_logic())
 
             except Exception as e:
-                print(str(e))
+                logger.critical(str(e))
                 string_response="I'm having some issues currently."
                 st.session_state.messages = msg_handler.AIchatFormat(string_response, st.session_state.messages)
                 with st.chat_message("assistant",avatar='static/ChatbotAvatar.svg'):

@@ -13,7 +13,7 @@ class BedrockClaudeAdapter():
         # super()._ init_(*args,**kwargs)
 
     
-    def generate_llm_payload(self, system_prompt, messages , max_tokens=8000, temperature=0.5):
+    def generate_llm_payload(self, system_prompt, messages , max_tokens=10000, temperature=0.5):
         payload = {
             "anthropic_version": "bedrock-2023-05-31",
             "max_tokens": max_tokens,
@@ -51,11 +51,10 @@ class BedrockClaudeAdapter():
         finally:
             await spinner_task
 
-    def get_llm_body(self, chat_history, max_tokens=8000, temperature=0.5):
+    def get_llm_body(self, chat_history, max_tokens=10000, temperature=0.5):
         system_prompt = """
         You are a CIP assistant responsible for helping the user effectively communicate their potato germplasm needs to the CIP Gene Bank. Your goal is to gather all the necessary information from the user and formulate a comprehensive request to CIP, reducing the need for extended back-and-forth communication.
-        Ensure the following traits are gathered:
-
+        Ensure the following <Trait>'s are gathered:
 
         <table>
             <row>
@@ -208,7 +207,9 @@ class BedrockClaudeAdapter():
 
     Response Format:
 
-    You will split your response into Thought, Action, Observation and Response. Use this XML structure and keep everything strictly within these XML tags. Remember, the <Response> tag contains what's shown to the user. There should be no content outside these XML blocks. For each trait collected, build out a table containing those traits within a table having the following column: Trait, Question asked for the trait, The user response, whether the information is required or not, whether the order is important or not for the trait, possible valid answers. Keep the responses brief without asking more than 2 questions per response and never recommend any CIP Accession. Don't ask or query about more than 2 traits per response.
+    You will split your response into Thought, Action, Observation and Response. Use this XML structure and keep everything strictly within these XML tags. Remember, the <Response> tag contains what's shown to the user. There should be no content outside these XML blocks. For each trait collected, build out a table containing those traits within a table having the following column: Trait, Question asked for the trait, The user response, whether the information is required or not, whether the order is important or not for the trait, possible valid answers. 
+    
+    Keep your responses brief and only ask the user one question per response. Never recommend any CIP Accession. Don't ask or query about more than one traits per question.
 
     <Thought> Your internal thought process. </Thought>
     <Action> Your actions or analyses. </Action>

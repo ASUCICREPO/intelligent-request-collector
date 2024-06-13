@@ -1,10 +1,11 @@
 import boto3
 
 class EmailHandler:
-    def __init__(self, uuid, email, region_name='us-east-1'):
+    def __init__(self, uuid, email, from_email, region_name='us-east-1'):
         self.client = boto3.client('ses', region_name=region_name)
         self.email = email
         self.uuid = uuid
+        self.from_email = from_email
 
     def send_email(self, body, subject= f'CIP Requirement Request'):
         response = self.client.send_email(
@@ -37,6 +38,6 @@ class EmailHandler:
                     'Data': f"{subject}: {self.uuid}",
                 },
             },
-            Source='mmaddur1@asu.edu'
+            Source=self.from_email
         )
         return response
