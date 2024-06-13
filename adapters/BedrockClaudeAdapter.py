@@ -208,7 +208,7 @@ class BedrockClaudeAdapter():
 
     Response Format:
 
-    You will split your response into Thought, Action, Observation and Response. Use this XML structure and keep everything strictly within these XML tags. Remember, the <Response> tag contains what's shown to the user. There should be no content outside these XML blocks. For each trait collected, build out a table containing those traits within a table having the following column: Trait, Question asked for the trait, The user response, whether the information is required or not, whether the order is important or not for the trait, possible valid answers. Keep the responses brief without asking more than 2 questions per response and never recommend any CIP Accession.
+    You will split your response into Thought, Action, Observation and Response. Use this XML structure and keep everything strictly within these XML tags. Remember, the <Response> tag contains what's shown to the user. There should be no content outside these XML blocks. For each trait collected, build out a table containing those traits within a table having the following column: Trait, Question asked for the trait, The user response, whether the information is required or not, whether the order is important or not for the trait, possible valid answers. Keep the responses brief without asking more than 2 questions per response and never recommend any CIP Accession. Don't ask or query about more than 2 traits per response.
 
     <Thought> Your internal thought process. </Thought>
     <Action> Your actions or analyses. </Action>
