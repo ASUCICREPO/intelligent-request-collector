@@ -20,7 +20,7 @@ logger.setLevel(logging.DEBUG)
 
 # Create a file handler
 file_handler = logging.FileHandler('chat.log')
-file_handler.setLevel(logging.INFO)
+file_handler.setLevel(logging.DEBUG)
 
 # Create a formatter and add it to the file handler
 formatter = logging.Formatter('%(asctime)s - %(levelname)s - %(message)s')
@@ -147,7 +147,6 @@ def app():
 
     # Display chat messages from history on app rerun
     with st.container(border=False):
-        logger.debug("%s",st.session_state.messages)
         for idx, message in enumerate(st.session_state.messages):
             if message['role'] == "user" and idx != 0:
                 content_val = message['content'][0]['text']
@@ -175,15 +174,17 @@ def app():
                     if "Got everything I need" in friendly_msg:
                         stored_table = msg_handler.get_stored_table(llm_response)
                         email_handler.send_email(body=stored_table)
+                        unformatted_msg="<Response> An email with your request has been sent to CIP. If you'd like to start a new request go to http://localhost:8501. </Response>"
+                        friendly_msg=msg_handler.parse_bot_response(llm_response)
                         st.session_state.messages.append({
                             'role': 'assistant', 
                             'content': [{
                                 'type': 'text', 
-                                'text': "<Response> An email with your request has been sent to CIP. If you'd like to start a new request go to http://localhost:8501. </Response>"
+                                'text': unformatted_msg
                             }]
                         })
                         with st.chat_message("assistant",avatar='static/ChatbotAvatar.svg'):
-                            st.markdown("An email with your request has been sent to CIP. If you'd like to start a new request go to http://localhost:8501.")
+                            st.markdown(friendly_msg)
                         disable()
                         st.rerun()
     
