@@ -51,4 +51,13 @@ class MessageHandler:
         else: #edge case issue with parsing
             return "I'm having some issues currently"
         
+    def get_stored_table(self, response):
+        table_pattern = r'<current_collected_table>(.*?)</current_collected_table>'
+        match = re.search(table_pattern, response, re.DOTALL)
+
+        if match:
+            table_text = match.group(1)
+            return table_text
+        else: #edge case issue with parsing
+            return "No stored table found"        
 

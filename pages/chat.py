@@ -6,6 +6,7 @@ import asyncio
 from adapters.BedrockClaudeAdapter import BedrockClaudeAdapter
 from managers.MessageHandler import MessageHandler
 from managers.S3FileHandler import S3Handler
+from managers.EmailHandler import EmailHandler
 from dotenv import load_dotenv
 import os
 
@@ -32,7 +33,7 @@ chat_API = ""  # api goes here
 
 msg_handler = MessageHandler()
 llm_adapter = BedrockClaudeAdapter()
-
+email_handler = EmailHandler(uuid=st.session_state.uuid, email=st.session_state.email)
 
 if "disabled" not in st.session_state:
     st.session_state["disabled"] = False
@@ -151,7 +152,10 @@ def app():
                     llm_response =await llm_adapter.fetch_with_loader(llm_payload)
                     st.session_state.messages = msg_handler.AIchatFormat(llm_response, st.session_state.messages)
                     friendly_msg=msg_handler.parse_bot_response(llm_response)
-
+                    if "Got everything I need" in friendly_msg:
+                        stored_table = msg_handler.get_stored_table(llm_response)
+                        email_handler.send_email(body=stored_table)
+    
                     with st.chat_message("assistant",avatar='static/ChatbotAvatar.svg'):
                         st.markdown(friendly_msg)
 
