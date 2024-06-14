@@ -170,7 +170,6 @@ def app():
 
             try:
                 async def llm_logic():
-                    final_msg=False
                     llm_payload = llm_adapter.get_llm_body(st.session_state.messages)
                     llm_response =await llm_adapter.fetch_with_loader(llm_payload)
                     st.session_state.messages = msg_handler.AIchatFormat(llm_response, st.session_state.messages)
