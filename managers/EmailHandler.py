@@ -7,7 +7,10 @@ class EmailHandler:
         self.uuid = uuid
         self.from_email = from_email
 
-    def send_email(self, body, subject= f'CIP Requirement Request'):
+    def send_email(self, body, files, subject= f'CIP Requirement Request'):
+        files_text = "The following are locations of the attached file/files:\n"
+        for file in files:
+            files_text += f"- {file}\n"
         response = self.client.send_email(
             Destination={
                 'ToAddresses': [self.email]
@@ -16,7 +19,7 @@ class EmailHandler:
                 'Body': {
                     'Text': {
                         'Charset': 'UTF-8',
-                        'Data': """
+                        'Data': files_text + """
                                     Information:
 
                                     Trait Tag: This column specifies the characteristic or attribute being inquired about, such as "Usage," "Color," "Tuber shape," etc.

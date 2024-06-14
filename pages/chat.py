@@ -174,7 +174,7 @@ def app():
                     if "Got everything I need" in friendly_msg:
                         logger.debug(llm_response)
                         stored_table = msg_handler.get_stored_table(llm_response)
-                        email_handler.send_email(body=stored_table)
+                        email_handler.send_email(body=stored_table, files=st.session_state.attached_files)
                         unformatted_msg="<Response> An email with your request has been sent to CIP. If you'd like to start a new request go to http://localhost:8501. </Response>"
                         friendly_msg=msg_handler.parse_bot_response(llm_response)
                         st.session_state.messages.append({
