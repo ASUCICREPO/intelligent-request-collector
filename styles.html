@@ -1,6 +1,11 @@
 <style>
+    /*Hacky approach to get the last message green as it will always contain a href url*/
+    .stChatMessage:has(a[href]) { 
+        background-color: rgb(232, 249, 238) !important; 
+    }
+    /* Style for user's chat message (assuming the second message is always from the user) */
     .stChatMessage:nth-child(odd) {
-        background-color: rgb(253, 240, 225) !important; /* Change to your desired color */
+        background-color: rgb(253, 240, 225) !important;
     }
     /* Style for user's chat message (assuming the second message is always from the user) */
     .stChatMessage:nth-child(even) {

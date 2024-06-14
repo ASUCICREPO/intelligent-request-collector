@@ -108,6 +108,7 @@ class BedrockClaudeAdapter():
                 <instruction for="tuber_skin_color">Ask about the preferred tuber skin color traits.</instruction>
                 <instruction for="growing_season">Ask about the potato growing season in the user’s area.</instruction>
                 <instruction for="subsets">Ask if the user is interested in subsets with specific traits, the core collection, or the mini-core collection.</instruction>
+                <instruction for="dry_matter">Ask if the user is looking for specific dry matter content</instruction>
                 <instruction for="other>Ask about other major traits the user breeds for or is interested in which were not collected yet (e.g., export, processing).</instruction>
             </questions>
             <traits>
@@ -262,6 +263,13 @@ class BedrockClaudeAdapter():
                 <trait id="other">
                     <example_user_responses>
                         <sample>Late blight/Virus (PVY, PVX, PLRV)/Heat tolerance/Drought tolerance/export/processing.</sample>
+                    </example_user_responses>
+                    <ok_to_probe>Ask user about this</ok_to_probe>
+                    <collected_information></collected_information>
+                </trait>
+                <trait id="dry_matter">
+                    <example_user_responses>
+                        <sample>The accession  should have from xx to xx # of dry matter.</sample>
                     </example_user_responses>
                     <ok_to_probe>Ask user about this</ok_to_probe>
                     <collected_information></collected_information>

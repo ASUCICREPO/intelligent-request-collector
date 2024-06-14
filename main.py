@@ -28,8 +28,17 @@ def app():
 
     if  st.session_state.email is None:
         st.write("# Welcome!")
-        
+        disclaimers=f"""Disclaimers:\n\n
+- Need to sign SMTA of the ITPGRFA for genebank \n
+- Need to sign SMTA of the ITPGRFA and aditional terms and conditions for breeding materials\n
+- Need to request for an Import Permit or an Official letter from their Ministry of Agriculture\n
+- If the Import Permit requires not standards tests, the requester must cover the costs of the aditional tests\n
+- Need to check with your Ministry of Agriculture if any extra document is needed\n
+- Need to cover the adm costs of producing the plants (depending on the requester and number of materials)\n
+- Need to cover the costs of quarantine in your country - it is recommended to check these cost before engaging in the process of requests, because sometimes can be very expensive\n"""
+
         st.warning('This is prototype level code demonstrating technical feasibility. This is not suitable for production environments and provided as-is and without warranties.', icon="⚠️")
+        st.info(disclaimers,icon="ℹ️")
         email = st.text_input("Your Email",placeholder="Please enter a valid email address")
         
         if st.button("Proceed to Chatbot"):
