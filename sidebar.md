@@ -6,7 +6,12 @@ With our cutting-edge gene bank and collaborative research, we tackle global cha
 
 ## Frequently asked questions
 
-- How can I request potato germplasm from CIP?
-- Can you help me find a high-yield potato variety for tropical regions?
-- I need a potato variety that can thrive in sandy soil. What should I do?
-- What should I do if I need a potato variety with multiple specific traits (e.g., disease resistance, heat tolerance, and high yield)?
+- Do I have to pay to have access to the materials?
+- How long does it take to receive the materials?
+- What paperwork needs to be done?
+- Do I have to pay royalts if a product is developed from the germplasm received from CIP?
+- Is there a limitation on number of varieties that I can receive?
+- Does CIP provide technical support to plant and propagate the materials?
+- Is it possible to stablish a collaboration with CIP scientists?
+- Is it possible to donate varieties to CIP Genebank?
+- Does CIP support other genebank with safety duplication?

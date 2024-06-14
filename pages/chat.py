@@ -16,11 +16,11 @@ load_dotenv()
 
 # Create a logger
 logger = logging.getLogger(__name__)
-logger.setLevel(logging.DEBUG)
+logger.setLevel(logging.INFO)
 
 # Create a file handler
 file_handler = logging.FileHandler('chat.log')
-file_handler.setLevel(logging.DEBUG)
+file_handler.setLevel(logging.INFO)
 
 # Create a formatter and add it to the file handler
 formatter = logging.Formatter('%(asctime)s - %(levelname)s - %(message)s')
@@ -47,6 +47,8 @@ else:
         logger=logger,
         region=region_name,
         dynamo_table_name=dynamo_table_name )
+
+
 
 chat_API = ""  # api goes here
 
@@ -110,7 +112,7 @@ def app():
     with open("sidebar.md", "r") as sidebar_file:
         sidebar_content = sidebar_file.read()
 
-    with open("styles.md", "r") as styles_file:
+    with open("styles.html", "r") as styles_file:
         styles_content = styles_file.read()
 
     st.write(styles_content, unsafe_allow_html=True)
@@ -118,6 +120,7 @@ def app():
 
     # Initialize chat history
     if "messages" not in st.session_state:
+        logger.info("Chat session for {%s} started.", st.session_state.uuid)
         st.session_state.messages = [
             {
                 'role': 'user', 
@@ -184,10 +187,13 @@ def app():
                                 'text': unformatted_msg
                             }]
                         })
+                        
                         with st.chat_message("assistant",avatar='static/ChatbotAvatar.svg'):
                             st.markdown(friendly_msg)
                         disable()
+                        logger.info("Chat session for {%s} concluded.", st.session_state.uuid)
                         st.rerun()
+                        
     
                     with st.chat_message("assistant",avatar='static/ChatbotAvatar.svg'):
                         st.markdown(friendly_msg)
