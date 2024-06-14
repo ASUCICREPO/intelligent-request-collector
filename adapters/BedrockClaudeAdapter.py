@@ -97,7 +97,8 @@ class BedrockClaudeAdapter():
                 <instruction for="tuber_shape">Ask about the preferred tuber shape traits (oval, round, long, compressed, rounded, ovoid, obovoid, elliptical, oblong, elongated).</instruction>
                 <instruction for="tuber_eye_depth">Ask about the preferred tuber eye depth traits (shallow, deep).</instruction>
                 <instruction for="maturity_time">Ask about the preferred maturity time for the potato variety (very early, early, medium, late).</instruction>
-                <instruction for="dormancy">Get the geographical location, day and night temperature, rainfall, day length, and altitude where the potatoes will be grown.</instruction>
+                <instruction for="dormancy">Ask about preferred tuber dormancy period.</instruction>
+                <instruction for="location_info">Get the geographical location, day and night temperature, rainfall, day length, and altitude where the potatoes will be grown.</location_info>
                 <instruction for="coordinates">Ask for latitude and longitude coordinates to improve location precision.</instruction>
                 <instruction for="resistance">Inquire about the main diseases and pests affecting potato production in the user’s area.</instruction>
                 <instruction for="stress_tolerance"Ask about the main soil and weather constraints/abiotic stress factors for potato production in the user’s area.</instruction>
@@ -175,7 +176,7 @@ class BedrockClaudeAdapter():
                     <ok_to_probe>Ask user about this</ok_to_probe>
                     <collected_information></collected_information>
                 </trait>
-                <trait id="location_dntemp_rainfall_dlength_alt">
+                <trait id="location_info">
                     <example_user_responses>
                         <sample>Heavy rain.</sample>
                         <sample>100m alt</sample>
