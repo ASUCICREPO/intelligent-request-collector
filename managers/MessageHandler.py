@@ -1,8 +1,9 @@
 import re
 
 class MessageHandler:
-    def __init__(self) -> None:
+    def __init__(self, logger) -> None:
         self.sessions = {}
+        self.logger = logger
     
     def humanChatFormat(self,prompt, messageHistory):
         human_chat_element = {
@@ -37,7 +38,7 @@ class MessageHandler:
             text = messageHistory[-2]['content'][0]['text']
             cleaned_text = re.sub(r'<current_collected_table>(.*?)</current_collected_table>', '', text)
             messageHistory[-2]['content'][0]['text'] = cleaned_text
-            print("\nMessage History After Clean", messageHistory)
+            self.logger.debug("Message History After Clean %s", messageHistory)
             
         return messageHistory
 
