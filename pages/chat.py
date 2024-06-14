@@ -187,9 +187,12 @@ def app():
                                 'text': unformatted_msg
                             }]
                         })
-                        
+
+                        st.image('static/HeadsetAvatar.png',width='60')
                         with st.chat_message("assistant",avatar='static/ChatbotAvatar.svg'):
                             st.markdown(friendly_msg)
+                        
+
                         disable()
                         logger.info("Chat session for {%s} concluded.", st.session_state.uuid)
                         st.rerun()
