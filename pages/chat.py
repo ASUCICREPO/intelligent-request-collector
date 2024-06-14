@@ -187,16 +187,18 @@ def app():
                                 'text': unformatted_msg
                             }]
                         })
-                        
+
                         with st.chat_message("assistant",avatar='static/ChatbotAvatar.svg'):
                             st.markdown(friendly_msg)
+                        
+                        
+
                         disable()
                         logger.info("Chat session for {%s} concluded.", st.session_state.uuid)
                         st.rerun()
-                        
-    
-                    with st.chat_message("assistant",avatar='static/ChatbotAvatar.svg'):
-                        st.markdown(friendly_msg)
+                    else:
+                        with st.chat_message("assistant",avatar='static/ChatbotAvatar.svg'):
+                            st.markdown(friendly_msg)
 
                 asyncio.run(llm_logic())
 
