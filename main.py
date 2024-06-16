@@ -38,9 +38,21 @@ def app():
 - Need to cover the costs of quarantine in your country - it is recommended to check these cost before engaging in the process of requests, because sometimes can be very expensive\n"""
 
         st.warning('This is prototype level code demonstrating technical feasibility. This is not suitable for production environments and provided as-is and without warranties.', icon="⚠️")
+
+        ### Center Potato With Headset ####
+        col1,col2,col3=st.columns(3)
+        with col1:
+            st.empty()
+        with col2:
+            st.image("static/potato_mod_frame3.png")
+        with col3:
+            st.empty()
+
         st.info(disclaimers,icon="ℹ️")
         email = st.text_input("Your Email",placeholder="Please enter a valid email address")
         
+        
+
         if st.button("Proceed to Chatbot"):
             if is_email_valid(email):
                 is_valid= is_email_valid(email)
@@ -51,6 +63,6 @@ def app():
                 st.switch_page("pages/chat.py")
             else:
                 st.error("Invalid email")
-    
+        
 if __name__ == '__main__':
     app()
