@@ -104,7 +104,7 @@ def app():
     )
 
     gradient_text_html = """
-    <div class="gradient-text">CIP Potato Chat Assistant</div>
+    <div class="gradient-text">CIP Chat Assistant</div>
     """
 
     st.markdown(gradient_text_html, unsafe_allow_html=True)
