@@ -28,15 +28,26 @@ def app():
 
     if  st.session_state.email is None:
         st.write("# Welcome!")
-        disclaimers=f"""Disclaimers:\n\n
-- Need to sign SMTA of the ITPGRFA for genebank \n
-- Need to sign SMTA of the ITPGRFA and aditional terms and conditions for breeding materials\n
-- Need to request for an Import Permit or an Official letter from their Ministry of Agriculture\n
-- If the Import Permit requires not standards tests, the requester must cover the costs of the aditional tests\n
-- Need to check with your Ministry of Agriculture if any extra document is needed\n
-- Need to cover the adm costs of producing the plants (depending on the requester and number of materials)\n
-- Need to cover the costs of quarantine in your country - it is recommended to check these cost before engaging in the process of requests, because sometimes can be very expensive\n"""
+        disclaimers = """Disclaimers:
 
+Please be aware that for germplasm distribution and acquisition, the following international standards apply:
+
+- In order to receive Plant Genetic Resources for Food and Agriculture (PGRFA), the customer must accept the Standard Material Transfer Agreement (SMTA) of the International Treaty on Plant Genetic Resources for Food and Agriculture (ITPGRFA) through signature, digital acceptance, or by the act of receiving and unpacking the shipment.
+
+- In order to receive PGRFA in the development phase (breeding materials), the customer must accept the SMTA of the ITPGRFA and additional terms and conditions that apply for the distribution of breeding materials.
+
+- These standard agreements apply to cases where the use is for breeding, research, and education for food and agriculture only. If the purpose of the use is different, such as cosmetic, pharmaceutical, or others, specific agreements and permissions will be required on a case-by-case basis.
+
+- The customer must request an import permit or an official letter issued by the competent authorities (e.g., Ministry of Agriculture) of the importing country specifying the type of requested materials (e.g., in vitro, botanical seeds).
+
+- If the import permit requires additional non-standard plant health tests, the requester must cover the cost for the additional tests.
+
+- It is recommended to check with the competent authorities if additional documents are required for PGRFA importation.
+
+- Depending on the requester and the number of requested PGRFA, a fee will be charged to cover recovery and distribution costs.
+
+- Please be aware that the costs of plant quarantine in the destination country must be covered by the customer. It is therefore recommended to check these costs and country requirements prior to requesting PGRFA.
+"""
         st.warning('This is prototype level code demonstrating technical feasibility. This is not suitable for production environments and provided as-is and without warranties.', icon="⚠️")
 
         ### Center Potato With Headset ####
