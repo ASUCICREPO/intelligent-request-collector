@@ -2,13 +2,18 @@
 
 **Prerequisites**
 
-- Make sure there is a valid internet gateway and VPC set up.
-- Ensure you have the Bedrock model Claude Sonnet available and activated.
+1) Make sure there is a valid internet gateway and VPC set up.
+2) Ensure you have the Bedrock model Claude Sonnet available and activated.
+3) Make there is a valid IAM Identity with the following permissions
+- AmazonBedrockFullAccess
+- AmazonEC2FullAccess
+- AmazonS3FullAccess
+- AmazonSESFullAccess
 
 **AWS Console Setup**
-1) Create a bucket with default policies, make note of the name
-2) Go to SES and verify the identity of the email address you will be sending to/from
-3) You must enable Claude Sonnet Model Access on AWS Console for Amazon Bedrock.
+
+1) Go to SES and verify the identity of the email address you will be sending to/from
+2) You must enable Claude Sonnet Model Access on AWS Console for Amazon Bedrock.
 
 **AWS CloudFormation**
 
@@ -18,37 +23,98 @@ aws configure sso
 ```
 aws cloudformation create-stack --stack-name $Stackname --template-url $Template_object_url --parameters ParameterKey=S3Bucket,ParameterValue=$S3BucketName ParameterKey=SESEmail,ParameterValue=$Email —profile $Profile (Profile parameter is optional)
 ```
+**Steps to launch an AWS EC2 Instance**
 
-**Steps to setup intelligent-request-collector on AWS EC2 instance:**
+1) Click 'Launch Instance' in the EC2 Console
+2) Provide a suitable name for the instance
+3) Choose Amazon Linux 2023 AMI and Architecture - 64-bit
+4) Instace type - t2.micro
+5) Choose a valid key pair name or create a new key pair
+6) Adjust network settings according to the setup vpc and subnet.
+7) Make sure to enable Auto-assign public IP and IPv6 IP
+8) Choose a suitable security group
+9) In Advanced Details, choose the IAM instance profile that follow the instructions of the prequisites.
+10) Add the following in the User data section:
+```
+Content-Type: multipart/mixed; boundary="//"
+MIME-Version: 1.0
+ 
+--//
+Content-Type: text/cloud-config; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: attachment;
+ filename="cloud-config.txt"
+ 
+#cloud-config
+cloud_final_modules:
+- [scripts-user, always]
+--//
+Content-Type: text/x-shellscript; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: attachment; filename="userdata.txt"
+ 
+#!/bin/bash
+# Update the instance and install screen
+yum update -y
+yum install -y screen
+yum install -y python
+yum install -y git
+runuser -l ec2-user -c 'mkdir intelligent-request-collector'
+git clone https://github.com/ASUCICREPO/intelligent-request-collector.git /home/ec2-user/intelligent-request-collector
+yum install -y python-pip
+cd /home/ec2-user/intelligent-request-collector
+runuser -l ec2-user -c 'pip3 install --user -r /home/ec2-user/intelligent-request-collector/requirements.txt'
+# Navigate to the project folder and start Streamlit in a detached screen session
+runuser -l ec2-user -c 'cd /home/ec2-user/intelligent-request-collector'
+runuser -l ec2-user -c 'screen -dmS my_streamlit_app bash -c "cd /home/ec2-user/intelligent-request-collector && streamlit run /home/ec2-user/intelligent-request-collector/main.py"'
+# Output screen sessions list
+echo "Streamlit app is running in a detached screen session named 'my_streamlit_app'."
+echo "To view active screen sessions, run: screen -ls"
+echo "To reattach to the Streamlit session, run: screen -r my_streamlit_app"
+--//-- 
+```
+11) Launch Instance
 
-1) Install python3.9
-```
-    sudo yum install python
-```
+**Connect to the EC2 Instance**
 
-2) Clone repo : 
-```
-    sudo yum update -y
-    sudo yum install git -y
-    git clone https://github.com/ASUCICREPO/intelligent-request-collector.git
-```
+1) Choose the Launched EC2 Instance
+2) Connect using EC2 Instance Connect tab
+3) For connection type, choose 'Connect using EC2 Instance Connect'
+4) Choose Public IPv4 address
+5) Make sure the username is 'ec2-user'.
+6) Click Connect
 
-3) Install pip: ``` sudo yum install python-pip -y ```
-4) Install requirements 
-   ```pip install -r requirements.txt```
-5) create .env and edit in the root folder of the repo
+**In the EC2 Instance**
+
+1) Traverse to the intelligent-resource-collector dir
+   ```
+   cd intelligent-resource-collector
+   ```
+2) create .env and edit the .env file
    ```nano .env```
-6) _Edit the .env file with the appropriate values. BUCKET_NAME and FROM_EMAIL are the only required ones; the region name should default to us-east-1._
+3) _Edit the .env file with the appropriate values. BUCKET_NAME and FROM_EMAIL are the only required ones; the region name should default to us-east-1._
    ```
     REGION_NAME=""
     BUCKET_NAME=""
     FROM_EMAIL=""
     DYNAMODB_TABLE_NAME=""
     ```
-7) Install Screen to run streamlit event even after closing Instance
+4) Save and exit the .env file
    ```
-   sudo yum install screen -y
+   Ctrl + X
+   y
+   Enter
    ```
+5) View the .env file
+   ```
+   cat .env
+   ```
+
+## Your setup is now complete
+
+**Note:** The rest of the documentations provides commands to manage any Screen/Streamlit sessions
 
 **Run Streamlit with Screen**
 
@@ -89,15 +155,6 @@ aws cloudformation create-stack --stack-name $Stackname --template-url $Template
    exit
    ```
 
-
-**Set your access information**
-_You can obtain this from your AWS Apps Portal._
-```
-export AWS_ACCESS_KEY_ID={REDACT}
-export AWS_SECRET_ACCESS_KEY={REDACT}
-export AWS_SESSION_TOKEN={REDACT}
-```
-
 **Run it**
 
 `streamlit run main.py`
@@ -111,3 +168,4 @@ _AWS Services that are utilized by this prototype:_
 * Amazon Bedrock (Generative AI Functionality)
 * Amazon SES (Email functionality)
 * Amazon S3 (File attachment storage)
+* Amazon EC2 (Frontend)
