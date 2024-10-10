@@ -9,11 +9,10 @@
 - AmazonEC2FullAccess
 - AmazonS3FullAccess
 - AmazonSESFullAccess
-
+4) Make sure to follow S3 Bucket naming convention
 **AWS Console Setup**
 
-1) Go to SES and verify the identity of the email address you will be sending to/from
-2) You must enable Claude Sonnet Model Access on AWS Console for Amazon Bedrock.
+1) You must enable Claude Sonnet Model Access on AWS Console for Amazon Bedrock.
 
 **AWS CloudFormation**
 
@@ -23,6 +22,8 @@ aws configure sso
 ```
 aws cloudformation create-stack --stack-name $Stackname --template-url $Template_object_url --parameters ParameterKey=S3Bucket,ParameterValue=$S3BucketName ParameterKey=SESEmail,ParameterValue=$Email —profile $Profile (Profile parameter is optional)
 ```
+- Ensure that the email verification is done. (A verification mail will be sent to the email that was given as a parameter.)
+
 **Steps to launch an AWS EC2 Instance**
 
 1) Click 'Launch Instance' in the EC2 Console
@@ -96,9 +97,9 @@ echo "To reattach to the Streamlit session, run: screen -r my_streamlit_app"
    ```nano .env```
 3) _Edit the .env file with the appropriate values. BUCKET_NAME and FROM_EMAIL are the only required ones; the region name should default to us-east-1._
    ```
-    REGION_NAME=""
-    BUCKET_NAME=""
-    FROM_EMAIL=""
+    REGION_NAME=$RegionName
+    BUCKET_NAME=$BucketName
+    FROM_EMAIL=$SESEmail
     DYNAMODB_TABLE_NAME=""
     ```
 4) Save and exit the .env file
